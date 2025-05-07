@@ -1,4 +1,4 @@
-namespace SecondHandEcommerce.Application.Commands.Reviews;
+namespace Application.Commands.Reviews;
 
 public class CreateReviewCommand
 {

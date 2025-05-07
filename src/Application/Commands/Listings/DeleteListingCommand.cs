@@ -1,4 +1,4 @@
-namespace SecondHandEcommerce.Application.Commands.Listings;
+namespace Application.Commands.Listings;
 
 public class DeleteListingCommand
 {

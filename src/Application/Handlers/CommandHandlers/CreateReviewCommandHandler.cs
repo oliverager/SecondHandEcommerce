@@ -1,6 +1,6 @@
+using Application.Commands.Reviews;
 using Application.Interfaces;
 using Domain.Entities;
-using SecondHandEcommerce.Application.Commands.Reviews;
 
 namespace Application.Handlers.CommandHandlers;
 

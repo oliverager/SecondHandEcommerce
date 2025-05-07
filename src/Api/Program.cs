@@ -33,9 +33,17 @@ builder.Services.AddScoped<IMongoDatabase>(sp =>
 builder.Services.AddScoped<MongoContext>();
 builder.Services.AddScoped<IListingRepository, ListingRepository>();
 builder.Services.AddScoped<IOrderRepository, OrderRepository>();
+
+// CommandHandler
 builder.Services.AddScoped<CreateListingCommandHandler>();
+builder.Services.AddScoped<CreateOrderCommandHandler>();
+
+// QueryHandler
 builder.Services.AddScoped<GetAllListingsQueryHandler>();
 builder.Services.AddScoped<GetListingByIdQueryHandler>();
+builder.Services.AddScoped<GetOrderByIdQueryHandler>();
+builder.Services.AddScoped<GetAllOrdersQueryHandler>();
+
 
 
 

@@ -1,6 +1,6 @@
+using Application.Commands.Listings;
 using Application.Interfaces;
 using Domain.Entities;
-using SecondHandEcommerce.Application.Commands.Listings;
 
 namespace Application.Handlers.CommandHandlers;
 

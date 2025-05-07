@@ -1,6 +1,6 @@
+using Application.Commands.Orders;
 using Application.Interfaces;
 using Domain.Entities;
-using SecondHandEcommerce.Application.Commands.Orders;
 
 namespace Application.Handlers.CommandHandlers;
 
