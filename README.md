@@ -19,7 +19,6 @@ This project is the backend implementation of a second-hand e-commerce platform.
 
 ## 📁 Project Structure
 
-\`\`\`
 SecondHandEcommerce/
 ├── src/
 │   ├── Api/                 # Web API (Controllers, Program.cs)
@@ -28,7 +27,6 @@ SecondHandEcommerce/
 │   └── Infrastructure/      # MongoDB, Redis, Cloud Storage
 ├── docker-compose.yml       # Redis and Mongo containers
 └── README.md
-\`\`\`
 
 ---
 
@@ -47,20 +45,19 @@ SecondHandEcommerce/
 
 ### 1. Clone the Repo
 
-\`\`\`bash
+
 git clone https://github.com/your-org/SecondHandEcommerce.git
 cd SecondHandEcommerce
-\`\`\`
 
 ### 2. Start MongoDB and Redis
 
-\`\`\`bash
+```bash
 docker-compose up -d
-\`\`\`
+```
 
 ### 3. Create Projects and Solution (if needed)
 
-\`\`\`bash
+```bash
 cd src
 dotnet new sln -n SecondHandEcommerce
 dotnet new webapi -n Api
@@ -69,13 +66,13 @@ dotnet new classlib -n Domain
 dotnet new classlib -n Infrastructure
 
 dotnet sln add Api/Api.csproj Application/Application.csproj Domain/Domain.csproj Infrastructure/Infrastructure.csproj
-\`\`\`
+```
 
 ### 4. Run the API
 
-\`\`\`bash
+```bash
 dotnet run --project src/Api
-\`\`\`
+```
 
 Visit: [http://localhost:5053/swagger](http://localhost:5053/swagger)
 
@@ -101,13 +98,13 @@ Returns a specific listing by ID.
 
 Use Swagger or Postman to send requests to:
 
-\`\`\`bash
+```bash
 http://localhost:5053/api/listing
-\`\`\`
+```
 
 Example request:
 
-\`\`\`json
+```json
 {
   "title": "Gaming Laptop",
   "description": "RTX 3070, 16GB RAM",
@@ -116,7 +113,7 @@ Example request:
   "category": ["electronics"],
   "imageUrls": ["https://image.com/laptop.jpg"]
 }
-\`\`\`
+```
 
 ---
 
