@@ -19,6 +19,7 @@ This project is the backend implementation of a second-hand e-commerce platform.
 
 ## 📁 Project Structure
 
+```
 SecondHandEcommerce/
 ├── src/
 │   ├── Api/                 # Web API (Controllers, Program.cs)
@@ -27,6 +28,7 @@ SecondHandEcommerce/
 │   └── Infrastructure/      # MongoDB, Redis, Cloud Storage
 ├── docker-compose.yml       # Redis and Mongo containers
 └── README.md
+```
 
 ---
 
