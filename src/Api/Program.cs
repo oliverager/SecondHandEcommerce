@@ -4,6 +4,7 @@ using Application.Interfaces;
 using Infrastructure.Cache;
 using Infrastructure.Mongo;
 using Infrastructure.Mongo.Repositories;
+using Infrastructure.Services;
 using StackExchange.Redis;
 using MongoDB.Driver;
 
@@ -33,6 +34,8 @@ builder.Services.AddScoped<IMongoDatabase>(sp =>
 builder.Services.AddScoped<MongoContext>();
 builder.Services.AddScoped<IListingRepository, ListingRepository>();
 builder.Services.AddScoped<IOrderRepository, OrderRepository>();
+builder.Services.AddScoped<IOrderService, OrderService>();
+
 
 // CommandHandler
 builder.Services.AddScoped<CreateListingCommandHandler>();
@@ -44,13 +47,17 @@ builder.Services.AddScoped<GetListingByIdQueryHandler>();
 builder.Services.AddScoped<GetOrderByIdQueryHandler>();
 builder.Services.AddScoped<GetAllOrdersQueryHandler>();
 
-
-
+builder.Services.AddScoped(sp =>
+{
+    var db = sp.GetRequiredService<IMongoDatabase>();
+    var client = sp.GetRequiredService<IMongoClient>();
+    return new MongoContext(db, client);
+});
 
 // Redis configuration (from appsettings or hardcoded)
 builder.Services.AddSingleton<IConnectionMultiplexer>(sp =>
 {
-    var configuration = builder.Configuration.GetConnectionString("Redis") 
+    var configuration = builder.Configuration.GetConnectionString("Redis")
                         ?? "localhost:6379"; // fallback default
     return ConnectionMultiplexer.Connect(configuration);
 });
