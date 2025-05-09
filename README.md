@@ -47,34 +47,23 @@ SecondHandEcommerce/
 
 ### 1. Clone the Repo
 
-
+```bash
 git clone https://github.com/your-org/SecondHandEcommerce.git
 cd SecondHandEcommerce
+```
 
-### 2. Start MongoDB and Redis
+### 2. Start the Full Stack (MongoDB, Redis, API)
 
 ```bash
 docker-compose up -d
 ```
 
-### 3. Create Projects and Solution (if needed)
+This will:
+- Start MongoDB in replica set mode on port 27017
+- Launch Redis for caching
+- Build and run the .NET API on port 5053
 
-```bash
-cd src
-dotnet new sln -n SecondHandEcommerce
-dotnet new webapi -n Api
-dotnet new classlib -n Application
-dotnet new classlib -n Domain
-dotnet new classlib -n Infrastructure
-
-dotnet sln add Api/Api.csproj Application/Application.csproj Domain/Domain.csproj Infrastructure/Infrastructure.csproj
-```
-
-### 4. Run the API
-
-```bash
-dotnet run --project src/Api
-```
+### 3. The API Is Running
 
 Visit: [http://localhost:5053/swagger](http://localhost:5053/swagger)
 
@@ -82,17 +71,29 @@ Visit: [http://localhost:5053/swagger](http://localhost:5053/swagger)
 
 ## 🔁 API Overview
 
-### \`POST /api/listing\`
+### `POST /api/listing`
 
 Creates a new item listing.
 
-### \`GET /api/listing\`
+### `GET /api/listing`
 
 Returns all listings (cached in Redis).
 
-### \`GET /api/listing/{id}\`
+### `GET /api/listing/{id}`
 
 Returns a specific listing by ID.
+
+### `POST /api/order`
+
+Places a new order and marks the listing as reserved (transactional).
+
+### `GET /api/order`
+
+Returns all orders.
+
+### `GET /api/order/{id}`
+
+Returns a specific order by ID.
 
 ---
 
@@ -125,7 +126,7 @@ Example request:
 - **Redis** caches read-heavy data like listings for fast access.
 - **CQRS** separates write (commands) and read (queries) paths.
 - **Repositories** abstract Mongo logic, keeping domain clean.
-- **GUIDs** are used for \`Id\` to decouple from MongoDB’s \`ObjectId\`.
+- **GUIDs** are used for `Id` to decouple from MongoDB’s `ObjectId`.
 
 ---
 
