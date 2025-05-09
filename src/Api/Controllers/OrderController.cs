@@ -50,13 +50,14 @@ public class OrderController : ControllerBase
         var orders = await _getAllHandler.HandleAsync(new GetAllOrdersQuery());
         return Ok(orders);
     }
-    
+
     [HttpPut("{id}/cancel")]
-    public async Task<IActionResult> Cancel(string id)
+    public async Task<IActionResult> Cancel(string id, [FromBody] CancelOrderCommand command)
     {
-        var command = new CancelOrderCommand { OrderId = id };
+        if (id != command.OrderId)
+            return BadRequest("Mismatched order ID");
+
         await _cancelHandler.HandleAsync(command);
         return NoContent();
     }
-
 }

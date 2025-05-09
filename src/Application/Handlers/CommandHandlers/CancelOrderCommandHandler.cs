@@ -14,6 +14,6 @@ public class CancelOrderCommandHandler
 
     public async Task HandleAsync(CancelOrderCommand command)
     {
-        await _orderService.CancelOrderAsync(command.OrderId);
+        await _orderService.CancelOrderAsync(command.OrderId, command.UserId);
     }
 }
