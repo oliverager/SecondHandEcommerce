@@ -1,3 +1,3 @@
-namespace SecondHandEcommerce.Application.Queries.Listings;
+namespace Application.Queries.Listings;
 
 public class GetAllListingsQuery { }

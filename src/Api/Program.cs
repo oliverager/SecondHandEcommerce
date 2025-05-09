@@ -35,17 +35,28 @@ builder.Services.AddScoped<MongoContext>();
 builder.Services.AddScoped<IListingRepository, ListingRepository>();
 builder.Services.AddScoped<IOrderRepository, OrderRepository>();
 builder.Services.AddScoped<IOrderService, OrderService>();
-
+builder.Services.AddScoped<IUserRepository, UserRepository>();
+builder.Services.AddScoped<IReviewRepository, ReviewRepository>();
 
 // CommandHandler
+builder.Services.AddScoped<CreateReviewCommandHandler>();
 builder.Services.AddScoped<CreateListingCommandHandler>();
 builder.Services.AddScoped<CreateOrderCommandHandler>();
+builder.Services.AddScoped<CancelOrderCommandHandler>();
+builder.Services.AddScoped<CreateUserCommandHandler>();
 
 // QueryHandler
 builder.Services.AddScoped<GetAllListingsQueryHandler>();
 builder.Services.AddScoped<GetListingByIdQueryHandler>();
 builder.Services.AddScoped<GetOrderByIdQueryHandler>();
 builder.Services.AddScoped<GetAllOrdersQueryHandler>();
+builder.Services.AddScoped<GetUserByIdQueryHandler>();
+builder.Services.AddScoped<GetReviewByIdQueryHandler>();
+builder.Services.AddScoped<GetReviewsBySellerIdQueryHandler>();
+
+// Cache abstraction
+builder.Services.AddSingleton<ICacheService, RedisCacheService>();
+
 
 builder.Services.AddScoped(sp =>
 {
@@ -62,8 +73,26 @@ builder.Services.AddSingleton<IConnectionMultiplexer>(sp =>
     return ConnectionMultiplexer.Connect(configuration);
 });
 
-// Cache abstraction
-builder.Services.AddSingleton<ICacheService, RedisCacheService>();
+builder.Services.AddSwaggerGen(options =>
+{
+    options.SwaggerDoc("v1", new Microsoft.OpenApi.Models.OpenApiInfo
+    {
+        Title = "SecondHand E-Commerce API",
+        Version = "v1",
+        Description = "Backend API for a second-hand item marketplace built with .NET and MongoDB.",
+        Contact = new Microsoft.OpenApi.Models.OpenApiContact
+        {
+            Name = "Oliver Ager Jørgensen & Alexander Moretto Stengaard",
+            Url = new Uri("https://github.com/oliverager/SecondHandEcommerce")
+        },
+        License = new Microsoft.OpenApi.Models.OpenApiLicense
+        {
+            Name = "MIT License",
+            Url = new Uri("https://opensource.org/licenses/MIT")
+        }
+    });
+});
+
 
 // Other DI (repos, handlers, etc.)
 builder.Services.AddControllers();

@@ -1,3 +1,4 @@
+using Domain.Entities;
 using MongoDB.Bson;
 using MongoDB.Bson.Serialization.Attributes;
 
@@ -27,6 +28,7 @@ public class ListingDocument
     [BsonElement("imageUrls")]
     public List<string> ImageUrls { get; set; } = new();
 
+    [BsonRepresentation(BsonType.String)]
     [BsonElement("status")]
-    public string Status { get; set; } = "Available"; // Stored as string
+    public ListingStatus Status { get; set; } = ListingStatus.Available;
 }

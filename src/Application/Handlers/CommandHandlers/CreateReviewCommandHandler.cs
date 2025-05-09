@@ -19,19 +19,26 @@ public class CreateReviewCommandHandler
     {
         var review = new Review
         {
-            SellerId = command.SellerId,
             Text = command.Text,
-            Rating = command.Rating
+            Rating = command.Rating,
+            SellerId = command.SellerId
         };
 
+        // Save the review
         await _reviewRepo.CreateAsync(review);
 
-        var seller = await _userRepo.GetByIdAsync(command.SellerId);
-        if (seller != null)
+        // Update user's ReviewIds list
+        var user = await _userRepo.GetByIdAsync(command.SellerId);
+        if (user != null)
         {
-            seller.ReviewIds.Add(review.Id);
-            // TODO: optionally recalculate seller's average rating
-            await _userRepo.UpdateAsync(seller);
+            user.ReviewIds.Add(review.Id);
+
+            // Recalculate average rating
+            var reviews = await _reviewRepo.GetAllAsync();
+            var sellerReviews = reviews.Where(r => r.SellerId == command.SellerId).ToList();
+            user.Rating = sellerReviews.Average(r => r.Rating);
+
+            await _userRepo.UpdateAsync(user);
         }
 
         return review.Id;
