@@ -14,16 +14,21 @@ public class OrderController : ControllerBase
     private readonly CreateOrderCommandHandler _createHandler;
     private readonly GetOrderByIdQueryHandler _getByIdHandler;
     private readonly GetAllOrdersQueryHandler _getAllHandler;
+    private readonly CancelOrderCommandHandler _cancelHandler;
+
 
     public OrderController(
         CreateOrderCommandHandler createHandler,
         GetOrderByIdQueryHandler getByIdHandler,
-        GetAllOrdersQueryHandler getAllHandler)
+        GetAllOrdersQueryHandler getAllHandler,
+        CancelOrderCommandHandler cancelHandler)
     {
         _createHandler = createHandler;
         _getByIdHandler = getByIdHandler;
         _getAllHandler = getAllHandler;
+        _cancelHandler = cancelHandler;
     }
+
 
     [HttpPost]
     public async Task<ActionResult<string>> Create(CreateOrderCommand command)
@@ -45,4 +50,13 @@ public class OrderController : ControllerBase
         var orders = await _getAllHandler.HandleAsync(new GetAllOrdersQuery());
         return Ok(orders);
     }
+    
+    [HttpPut("{id}/cancel")]
+    public async Task<IActionResult> Cancel(string id)
+    {
+        var command = new CancelOrderCommand { OrderId = id };
+        await _cancelHandler.HandleAsync(command);
+        return NoContent();
+    }
+
 }

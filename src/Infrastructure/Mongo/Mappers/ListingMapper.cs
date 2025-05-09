@@ -14,7 +14,7 @@ public static class ListingMapper
         SellerId = listing.SellerId,
         Category = listing.Category,
         ImageUrls = listing.ImageUrls,
-        Status = listing.Status.ToString()
+        Status = listing.Status
     };
 
     public static Listing ToDomain(ListingDocument doc) => new()
@@ -26,6 +26,6 @@ public static class ListingMapper
         SellerId = doc.SellerId,
         Category = doc.Category,
         ImageUrls = doc.ImageUrls,
-        Status = Enum.Parse<ListingStatus>(doc.Status)
+        Status = doc.Status
     };
 }

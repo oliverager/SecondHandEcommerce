@@ -1,9 +1,9 @@
 using Application.Commands.Listings;
 using Application.Handlers.CommandHandlers;
 using Application.Handlers.QueryHandlers;
+using Application.Queries.Listings;
 using Domain.Entities;
 using Microsoft.AspNetCore.Mvc;
-using SecondHandEcommerce.Application.Queries.Listings;
 
 namespace Api.Controllers;
 

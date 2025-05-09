@@ -1,3 +1,4 @@
+using Domain.Entities;
 using MongoDB.Bson;
 using MongoDB.Bson.Serialization.Attributes;
 
@@ -18,6 +19,7 @@ public class OrderDocument
     [BsonElement("createdAt")]
     public DateTime CreatedAt { get; set; }
 
+    [BsonRepresentation(BsonType.String)]
     [BsonElement("status")]
-    public string Status { get; set; } = "Pending";
+    public OrderStatus Status { get; set; } = OrderStatus.Pending;
 }

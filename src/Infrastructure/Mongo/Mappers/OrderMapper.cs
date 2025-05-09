@@ -11,7 +11,7 @@ public static class OrderMapper
         BuyerId = order.BuyerId,
         ItemId = order.ItemId,
         CreatedAt = order.CreatedAt,
-        Status = order.Status.ToString()
+        Status = order.Status
     };
 
     public static Order ToDomain(OrderDocument doc) => new()
@@ -20,6 +20,6 @@ public static class OrderMapper
         BuyerId = doc.BuyerId,
         ItemId = doc.ItemId,
         CreatedAt = doc.CreatedAt,
-        Status = Enum.Parse<OrderStatus>(doc.Status)
+        Status = doc.Status
     };
 }

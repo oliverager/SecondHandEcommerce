@@ -27,10 +27,18 @@ public class OrderService : IOrderService
                 .Find(session, x => x.Id == itemId)
                 .FirstOrDefaultAsync();
 
-            if (listingDoc == null || listingDoc.Status != "Available")
+            if (listingDoc == null || listingDoc.Status != ListingStatus.Available)
                 throw new InvalidOperationException("Item is not available");
+            
+            var userDoc = await _context.Users
+                .Find(session, x => x.Id == buyerId)
+                .FirstOrDefaultAsync();
 
-            listingDoc.Status = "Reserved";
+            if (userDoc == null)
+                throw new InvalidOperationException("Buyer does not exist");
+
+
+            listingDoc.Status = ListingStatus.Reserved;
 
             var order = new Order
             {
@@ -54,4 +62,47 @@ public class OrderService : IOrderService
             throw;
         }
     }
+    
+    public async Task CancelOrderAsync(string orderId)
+    {
+        using var session = await _context.Client.StartSessionAsync();
+        session.StartTransaction();
+
+        try
+        {
+            var orderDoc = await _context.Orders
+                .Find(session, x => x.Id == orderId)
+                .FirstOrDefaultAsync();
+
+            if (orderDoc == null)
+                throw new InvalidOperationException("Order not found");
+
+            if (orderDoc.Status != OrderStatus.Pending && orderDoc.Status != OrderStatus.Paid)
+                throw new InvalidOperationException("Only pending or paid orders can be cancelled");
+
+            orderDoc.Status = OrderStatus.Cancelled;
+
+            var listingDoc = await _context.Listings
+                .Find(session, x => x.Id == orderDoc.ItemId)
+                .FirstOrDefaultAsync();
+
+            if (listingDoc != null && listingDoc.Status == ListingStatus.Reserved)
+            {
+                listingDoc.Status = ListingStatus.Available;
+                var listingFilter = Builders<ListingDocument>.Filter.Eq(x => x.Id, listingDoc.Id);
+                await _context.Listings.ReplaceOneAsync(session, listingFilter, listingDoc);
+            }
+
+            var orderFilter = Builders<OrderDocument>.Filter.Eq(x => x.Id, orderDoc.Id);
+            await _context.Orders.ReplaceOneAsync(session, orderFilter, orderDoc);
+
+            await session.CommitTransactionAsync();
+        }
+        catch
+        {
+            await session.AbortTransactionAsync();
+            throw;
+        }
+    }
+
 }

@@ -35,17 +35,20 @@ builder.Services.AddScoped<MongoContext>();
 builder.Services.AddScoped<IListingRepository, ListingRepository>();
 builder.Services.AddScoped<IOrderRepository, OrderRepository>();
 builder.Services.AddScoped<IOrderService, OrderService>();
-
+builder.Services.AddScoped<IUserRepository, UserRepository>();
 
 // CommandHandler
 builder.Services.AddScoped<CreateListingCommandHandler>();
 builder.Services.AddScoped<CreateOrderCommandHandler>();
+builder.Services.AddScoped<CancelOrderCommandHandler>();
+builder.Services.AddScoped<CreateUserCommandHandler>();
 
 // QueryHandler
 builder.Services.AddScoped<GetAllListingsQueryHandler>();
 builder.Services.AddScoped<GetListingByIdQueryHandler>();
 builder.Services.AddScoped<GetOrderByIdQueryHandler>();
 builder.Services.AddScoped<GetAllOrdersQueryHandler>();
+builder.Services.AddScoped<GetUserByIdQueryHandler>();
 
 builder.Services.AddScoped(sp =>
 {

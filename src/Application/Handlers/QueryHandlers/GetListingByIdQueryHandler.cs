@@ -1,6 +1,6 @@
 using Application.Interfaces;
+using Application.Queries.Listings;
 using Domain.Entities;
-using SecondHandEcommerce.Application.Queries.Listings;
 
 namespace Application.Handlers.QueryHandlers;
 
