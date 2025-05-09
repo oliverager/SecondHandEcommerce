@@ -1,37 +1,20 @@
+using Application.Commands.Orders;
 using Application.Interfaces;
-using Domain.Entities;
-using SecondHandEcommerce.Application.Commands.Orders;
 
 namespace Application.Handlers.CommandHandlers;
 
 public class CreateOrderCommandHandler
 {
-    private readonly IOrderRepository _orderRepository;
-    private readonly IListingRepository _listingRepository;
+    private readonly IOrderService _orderService;
 
-    public CreateOrderCommandHandler(IOrderRepository orderRepo, IListingRepository listingRepo)
+    public CreateOrderCommandHandler(IOrderService orderService)
     {
-        _orderRepository = orderRepo;
-        _listingRepository = listingRepo;
+        _orderService = orderService;
     }
 
     public async Task<string> HandleAsync(CreateOrderCommand command)
     {
-        var listing = await _listingRepository.GetByIdAsync(command.ItemId);
-        if (listing is null || listing.Status != ListingStatus.Available)
-            throw new InvalidOperationException("Item not available");
-
-        listing.Status = ListingStatus.Reserved;
-        await _listingRepository.UpdateAsync(listing);
-
-        var order = new Order
-        {
-            BuyerId = command.BuyerId,
-            ItemId = command.ItemId,
-            Status = OrderStatus.Pending
-        };
-
-        await _orderRepository.CreateAsync(order);
-        return order.Id;
+        return await _orderService.PlaceOrderAsync(command.BuyerId, command.ItemId);
     }
 }
+

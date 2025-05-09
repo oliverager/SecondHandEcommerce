@@ -1,4 +1,4 @@
-namespace SecondHandEcommerce.Application.Commands.Orders;
+namespace Application.Commands.Orders;
 
 public class CancelOrderCommand
 {

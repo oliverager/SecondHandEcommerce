@@ -1,3 +1,5 @@
+namespace Infrastructure.Mongo;
+
 public class MongoSettings
 {
     public string ConnectionString { get; set; } = null!;
