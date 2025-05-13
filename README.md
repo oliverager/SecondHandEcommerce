@@ -124,13 +124,18 @@ Example request:
 
   **MongoDB** is used for flexible schema and scalability.
 
+  **MongoDB Replica Sets**, we can ensure high availability and failover capabilities. This setup allows the system to handle a higher load and maintain availability even in case of primary node failures.
+
+
+  **MongoDB Atlas:** While the system is running locally, we also considered hosting the database on MongoDB Atlas to provide a fully managed, scalable cloud solution. Atlas would automatically handle the database’s scaling, backup, and monitoring. With Atlas, we can set up global clusters and take advantage of multi-region replication, which is beneficial for global applications.
+
   **Redis caches** read-heavy data like listings, orders, and users for fast access, reducing database load and improving performance:
 
         Caching in GetOrderByIdQueryHandler: Redis is used to cache the result of retrieving an order by Id. The system first checks if the order is already cached before querying MongoDB. If not found in the cache, the order is fetched from the repository and cached for future requests.
 
         Caching in GetUserByIdQueryHandler: Similarly, user data is cached using Redis. When querying a user by UserId, the system checks Redis for the cached result, reducing the need for repeated database queries.
 
-        More caching could be added in future
+        More caching could be added in future, especially for stuff like search results if we had a more time to make the platform. 
 
   **CQRS:** The system uses the Command Query Responsibility Segregation pattern to separate read (queries) and write (commands) paths, ensuring better performance and maintainability.
 
