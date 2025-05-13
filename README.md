@@ -120,41 +120,59 @@ Example request:
 
 ---
 
-## 🧠 Design Decisions
+🧠 Design Decisions
 
-- **MongoDB** is used for flexible schema and scalability.
-- **Redis** caches read-heavy data like listings for fast access.
-- **CQRS** separates write (commands) and read (queries) paths.
-- **Repositories** abstract Mongo logic, keeping domain clean.
-- **GUIDs** are used for `Id` to decouple from MongoDB’s `ObjectId`.
+  **MongoDB** is used for flexible schema and scalability.
 
+  **Redis caches** read-heavy data like listings, orders, and users for fast access, reducing database load and improving performance:
 
-- **Created Indexes** for various documents for faster retrieval, especially stuff like indexing orders on sellerId and CreatedAt. Here is a view of all Indexes made.
+        Caching in GetOrderByIdQueryHandler: Redis is used to cache the result of retrieving an order by Id. The system first checks if the order is already cached before querying MongoDB. If not found in the cache, the order is fetched from the repository and cached for future requests.
 
+        Caching in GetUserByIdQueryHandler: Similarly, user data is cached using Redis. When querying a user by UserId, the system checks Redis for the cached result, reducing the need for repeated database queries.
+
+        More caching could be added in future
+
+  **CQRS:** The system uses the Command Query Responsibility Segregation pattern to separate read (queries) and write (commands) paths, ensuring better performance and maintainability.
+
+  **Repositories:** MongoDB repositories are used to abstract away the database logic, keeping the domain layer clean and focused on business logic.
+
+  **GUIDs:** All Id fields use GUIDs instead of MongoDB’s ObjectId for greater flexibility and consistency across systems.
+
+  **Indexes:** Indexes are created on frequently queried fields, such as sellerId in Orders and Listings, to improve the performance of data retrieval.
+
+list of indexes created
 
 rs0 [direct: primary] test> use SecondHandEcommerce
 switched to db SecondHandEcommerce
+
+// Users Indexes
 rs0 [direct: primary] SecondHandEcommerce> db.Users.getIndexes()
 [
   { v: 2, key: { _id: 1 }, name: '_id_' },
   { v: 2, key: { email: 1 }, name: 'email_1', unique: true }
 ]
+
+// Orders Indexes
 rs0 [direct: primary] SecondHandEcommerce> db.Orders.getIndexes()
 [
   { v: 2, key: { _id: 1 }, name: '_id_' },
   { v: 2, key: { buyerId: 1 }, name: 'buyerId_1', unique: true },
   { v: 2, key: { createdAt: 1 }, name: 'createdAt_1', unique: true }
 ]
+
+// Listings Indexes
 rs0 [direct: primary] SecondHandEcommerce> db.Listings.getIndexes()
 [
   { v: 2, key: { _id: 1 }, name: '_id_' },
   { v: 2, key: { sellerId: 1 }, name: 'sellerId_1' }
 ]
+
+// Reviews Indexes
 rs0 [direct: primary] SecondHandEcommerce> db.Reviews.getIndexes()
 [
   { v: 2, key: { _id: 1 }, name: '_id_' },
   { v: 2, key: { sellerId: 1 }, name: 'sellerId_1', unique: true }
-
+]
 
 ---
 
