@@ -13,6 +13,24 @@ public class OrderRepository : IOrderRepository
     public OrderRepository(MongoContext context)
     {
         _collection = context.Orders;
+        CreateIndexes();
+    }
+
+    private void CreateIndexes()
+{
+    var indexKeys = Builders<OrderDocument>.IndexKeys;
+
+    var buyerIndex = new CreateIndexModel<OrderDocument>(
+        indexKeys.Ascending(x => x.BuyerId),
+        new CreateIndexOptions { Unique = true });
+
+    var timeIndex = new CreateIndexModel<OrderDocument>(
+        indexKeys.Ascending(x => x.CreatedAt),
+        new CreateIndexOptions { Unique = true });    
+
+    _collection.Indexes.CreateOne(buyerIndex);
+    _collection.Indexes.CreateOne(timeIndex);
+   
     }
 
     public async Task<Order?> GetByIdAsync(string id)
