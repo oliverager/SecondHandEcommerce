@@ -179,6 +179,32 @@ rs0 [direct: primary] SecondHandEcommerce> db.Reviews.getIndexes()
   { v: 2, key: { sellerId: 1 }, name: 'sellerId_1', unique: true }
 ]
 
+
+Caching Invalidation Strategy
+
+For caching, we implemented Redis to store frequently accessed data. However, for cache invalidation, we could have used a time-based expiration strategy (TTL - Time To Live) to ensure that cached data remains up-to-date.
+Time-Based Expiration (TTL)
+
+To ensure the cache doesn't serve stale data, we could have set a time-based expiration on cached entries. This means that once data is cached, it would expire after a predefined duration (e.g., 10 minutes). After the expiration time, the cache would be invalidated, and subsequent requests would retrieve fresh data from the database and re-cache it for the next TTL period.
+
+For example:
+
+    Listings and Orders: We might have set a TTL of 5 minutes for frequently accessed data like product listings and orders to ensure that the cache is periodically refreshed.
+
+    User Profile: For data like user profiles, a TTL of 10 minutes could have been set, as updates to profiles are generally less frequent than other data types.
+
+This approach provides a simple mechanism for ensuring cache freshness without having to manually invalidate the cache on every update.
+Why We Could Have Chosen This Approach:
+
+    Simplicity: Time-based expiration is easy to implement and provides a simple way to ensure data stays fresh without requiring complex event-based logic.
+
+    Performance: By refreshing cached data periodically, we reduce the load on the database and improve response times for frequently accessed data.
+
+    Scalability: This approach works well for horizontally scaled systems, where the cache is distributed across multiple nodes.
+
+While we could have implemented this strategy, other strategies like event-based invalidation could be considered depending on future needs, such as when data changes more frequently.
+
+
 ---
 
 ## 👥 Team Contributions
