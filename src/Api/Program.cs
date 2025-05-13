@@ -8,9 +8,9 @@ using Infrastructure.Services;
 using StackExchange.Redis;
 using MongoDB.Driver;
 
-
 var builder = WebApplication.CreateBuilder(args);
 
+// MongoDB Configuration
 builder.Services.Configure<MongoSettings>(
     builder.Configuration.GetSection("MongoSettings"));
 
@@ -54,10 +54,10 @@ builder.Services.AddScoped<GetUserByIdQueryHandler>();
 builder.Services.AddScoped<GetReviewByIdQueryHandler>();
 builder.Services.AddScoped<GetReviewsBySellerIdQueryHandler>();
 
-// Cache abstraction
-builder.Services.AddSingleton<ICacheService, RedisCacheService>();
+// Cache Service - Redis
+builder.Services.AddSingleton<ICacheService, CacheService>(); // Register CacheService as Singleton
 
-
+// MongoContext setup
 builder.Services.AddScoped(sp =>
 {
     var db = sp.GetRequiredService<IMongoDatabase>();
@@ -65,7 +65,7 @@ builder.Services.AddScoped(sp =>
     return new MongoContext(db, client);
 });
 
-// Redis configuration (from appsettings or hardcoded)
+// Redis Configuration
 builder.Services.AddSingleton<IConnectionMultiplexer>(sp =>
 {
     var configuration = builder.Configuration.GetConnectionString("Redis")
@@ -93,14 +93,12 @@ builder.Services.AddSwaggerGen(options =>
     });
 });
 
-
 // Other DI (repos, handlers, etc.)
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
 var app = builder.Build();
-
 
 using (var scope = app.Services.CreateScope())
 {
