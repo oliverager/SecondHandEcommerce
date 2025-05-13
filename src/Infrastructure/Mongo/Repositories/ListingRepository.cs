@@ -13,6 +13,21 @@ public class ListingRepository : IListingRepository
     public ListingRepository(MongoContext context)
     {
         _collection = context.Listings;
+        CreateIndexes();
+    }
+
+    private void CreateIndexes()
+{
+    var indexKeys = Builders<ListingDocument>.IndexKeys;
+
+    
+
+    var sellerIndex = new CreateIndexModel<ListingDocument>(
+        indexKeys.Ascending(x => x.SellerId),
+        new CreateIndexOptions { Unique = false });    
+
+    _collection.Indexes.CreateOne(sellerIndex);
+   
     }
 
     public async Task<Listing?> GetByIdAsync(string id)

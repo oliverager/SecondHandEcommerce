@@ -128,29 +128,43 @@ Example request:
 - **Repositories** abstract Mongo logic, keeping domain clean.
 - **GUIDs** are used for `Id` to decouple from MongoDB’s `ObjectId`.
 
+
+- **Created Indexes** for various documents for faster retrieval, especially stuff like indexing orders on sellerId and CreatedAt. Here is a view of all Indexes made.
+
+
+rs0 [direct: primary] test> use SecondHandEcommerce
+switched to db SecondHandEcommerce
+rs0 [direct: primary] SecondHandEcommerce> db.Users.getIndexes()
+[
+  { v: 2, key: { _id: 1 }, name: '_id_' },
+  { v: 2, key: { email: 1 }, name: 'email_1', unique: true }
+]
+rs0 [direct: primary] SecondHandEcommerce> db.Orders.getIndexes()
+[
+  { v: 2, key: { _id: 1 }, name: '_id_' },
+  { v: 2, key: { buyerId: 1 }, name: 'buyerId_1', unique: true },
+  { v: 2, key: { createdAt: 1 }, name: 'createdAt_1', unique: true }
+]
+rs0 [direct: primary] SecondHandEcommerce> db.Listings.getIndexes()
+[
+  { v: 2, key: { _id: 1 }, name: '_id_' },
+  { v: 2, key: { sellerId: 1 }, name: 'sellerId_1' }
+]
+rs0 [direct: primary] SecondHandEcommerce> db.Reviews.getIndexes()
+[
+  { v: 2, key: { _id: 1 }, name: '_id_' },
+  { v: 2, key: { sellerId: 1 }, name: 'sellerId_1', unique: true }
+
+
 ---
 
 ## 👥 Team Contributions
 
-Each group member contributed to:
-- Architecture and domain modeling
-- CQRS layer and command/query handlers
-- MongoDB/Redis setup and integration
-- Dockerization and environment setup
-- API design and controller logic
-
-Git history clearly reflects individual contributions.
+Made by Alexander and Oliver
 
 ---
 
-## 📌 TODO / Extensions
 
-- Implement cloud storage integration for images
-- Add seller reviews and user rating system
-- Handle transaction consistency in multi-step operations (e.g., place order + reserve listing)
-- Implement advanced search and filtering
-
----
 
 ## 📄 License
 
