@@ -13,7 +13,29 @@ public class UserRepository : IUserRepository
     public UserRepository(MongoContext context)
     {
         _collection = context.Users;
+        CreateIndexes();
     }
+
+
+    private void CreateIndexes()
+{
+    var indexKeys = Builders<UserDocument>.IndexKeys;
+
+    var emailIndex = new CreateIndexModel<UserDocument>(
+        indexKeys.Ascending(x => x.Email),
+        new CreateIndexOptions { Unique = true });
+
+    // Optional: Uncomment if usernames are part of your model
+    /*
+    var usernameIndex = new CreateIndexModel<UserDocument>(
+        indexKeys.Ascending(x => x.Username),
+        new CreateIndexOptions { Unique = true });
+    */
+
+    _collection.Indexes.CreateOne(emailIndex);
+    // _collection.Indexes.CreateOne(usernameIndex);
+}
+
 
     public async Task<User?> GetByIdAsync(string id)
     {

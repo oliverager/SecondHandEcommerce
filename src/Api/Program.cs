@@ -100,6 +100,17 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
 var app = builder.Build();
+
+
+using (var scope = app.Services.CreateScope())
+{
+    // Triggers indexes.
+    var userRepo = scope.ServiceProvider.GetRequiredService<IUserRepository>();
+    var listingRepo = scope.ServiceProvider.GetRequiredService<IListingRepository>();
+    var orderRepo = scope.ServiceProvider.GetRequiredService<IOrderRepository>();
+    var reviewRepo = scope.ServiceProvider.GetRequiredService<IReviewRepository>();
+}
+
 app.UseSwagger();
 app.UseSwaggerUI();
 app.MapControllers();
