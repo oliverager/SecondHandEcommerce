@@ -13,7 +13,23 @@ public class ReviewRepository : IReviewRepository
     public ReviewRepository(MongoContext context)
     {
         _collection = context.Reviews;
+        CreateIndexes();
     }
+
+
+    private void CreateIndexes()
+    {
+    var indexKeys = Builders<ReviewDocument>.IndexKeys;
+
+    var sellerIndex = new CreateIndexModel<ReviewDocument>(
+        indexKeys.Ascending(x => x.SellerId),
+        new CreateIndexOptions { Unique = true });
+
+
+    _collection.Indexes.CreateOne(sellerIndex);
+
+    }   
+
 
     public async Task<Review?> GetByIdAsync(string id)
     {
