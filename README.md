@@ -122,6 +122,25 @@ Example request:
 
 🧠 Design Decisions
 
+🧠 Design Decisions (Updated)
+
+
+  **Transactions in MongoDB**
+
+  MongoDB supports multi-document transactions in replica set configurations, which ensures that operations across multiple documents can be executed atomically. While MongoDB's default behavior is to operate on single documents at a time, we can take advantage of transactions for operations that need to be atomic.
+
+  **For example:**
+
+    Placing an Order: When a user places an order, we could have used a transaction to ensure that the order is recorded and the corresponding listing status is updated atomically. This would ensure that either both operations succeed or neither does, preventing issues like listing availability mismatch after a successful order creation.
+
+        Transaction Example: If a user places an order for a specific listing, the system would use a transaction to:
+
+            Mark the listing as reserved (or unavailable).
+
+            Create the corresponding order document in MongoDB.
+
+    Using transactions here would guarantee that either both updates happen or none, preventing potential data inconsistencies (like a reserved listing being sold to multiple users).
+
   **MongoDB** is used for flexible schema and scalability.
 
   **MongoDB Replica Sets**, we can ensure high availability and failover capabilities. This setup allows the system to handle a higher load and maintain availability even in case of primary node failures.
